@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="content">
 		<view class="footer">
 			已经见底了哟(＾Ｕ＾)ノ~ＹＯ
 		</view>
