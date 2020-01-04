@@ -6,7 +6,7 @@
 					<uni-icon type="plusempty" size="36"></uni-icon>
 					<view>上传图片</view>
 				</view>
-				<image mode="aspectFit" v-else></image>
+				<image class="show-img" mode="aspectFit" :src="imgSrc" v-else></image>
 			</view>
 			<button class="add-btn" @click="add">从产品库同步资料</button>
 		</view>
@@ -28,10 +28,16 @@
 				<textarea class="uni-input" name="input" placeholder="请简述产品特点"  v-model="form.descript"/>
 			</view>
 		</form>
-		<button class="save-btn">保存</button>
+		<form class="form no-margin">
+			<view class="uni-form-item uni-column">
+				<view class="title">产品详情</view>
+				<textarea class="uni-input" name="input" placeholder="请详细描述产品"  v-model="form.detail"/>
+			</view>
+		</form>
+		<button class="save-btn">发布</button>
 		<!-- 弹出 -->
 		<view class="model" :class="{show: model.visible, hide: !model.visible}">
-			<view class="top">
+			<view class="top model-top">
 				<view>请选择产品同步资料</view>
 				<uni-icon type="closeempty"></uni-icon>
 			</view>
@@ -39,11 +45,16 @@
 				<input class="search-input" placeholder="请输入搜索关键字" v-model="model.search"  />
 				<button>搜索</button>
 			</view>
-			<scroll-view scroll-y="true" @scrolltolower="scrolltolower">
+			<scroll-view scroll-y="true" @scrolltolower="scrolltolower" class="scroll" :style="{height: scrollHeight + 'px'}">
 				<view class="goods-wrap">
-					<view v-for="(gl, index) in goodsList" :key="'gl' + index" class="inner">
-						<image mode="aspectFit" :src="gl.img"></image>
-						<view class="name">{{ gl.name }}</view>
+					<view v-for="(gl, index) in goodsList" :key="'gl' + index" class="inner" @click="choiceGood(gl)">
+						<view class="inner-margin">
+							<!-- <image mode="aspectFit" :src="gl.img"></image> -->
+							<view class="img-wrap">
+								<img :src="gl.img" />
+							</view>
+							<view class="name">{{ gl.name }}</view>
+						</view>
 					</view>
 				</view>
 			</scroll-view>
@@ -57,7 +68,17 @@
 		components:{
 			uniIcon,
 		},
-		data() {
+		mounted(){
+			this.calcuHeight();
+			const self = this;
+			window.addEventListener('resize', () => {
+				self.calcuHeight();
+			})
+		},
+		onLoad() {
+			this.getList();
+		},
+ 		data() {
 			return {
 				imgSrc: '',
 				form: {
@@ -65,15 +86,44 @@
 					unit: '',
 					price: '',
 					descript: '',
+					detail: '',
 				},
 				model: {
 					visible: false,
 					search: '',
 				},
 				goodsList: [],
+				scrollHeight: 0,
 			}
 		},
 		methods:{
+			// 加载产品
+			getList() {
+				this.$api('goodsList').then(res => {
+					this.goodsList = this.goodsList.concat(res);
+				})
+			},
+			// 切换frame
+			toggleFrame() {
+				this.model.visible = !this.model.visible;
+			},
+			// 选中产品
+			choiceGood(item) {
+				Object.assign(this.form, item);
+				this.imgSrc = item.img;
+				console.log('imgSrc: ', this.imgSrc);
+				this.toggleFrame();
+			},
+			// 计算高度
+			calcuHeight() {
+				const self = this;
+				uni.getSystemInfo({
+					success(data) {
+						self.scrollHeight = data.windowHeight - (44 + 32 + 42 + 35 + 10);
+					}
+				});
+			},
+			// 上传图片
 			uploadImg() {
 				uni.chooseImage({
 					count: 1,
@@ -82,27 +132,33 @@
 					}
 				})
 			},
+			// 点击添加产品
 			add() {
-				this.model.visible = true;
+				this.toggleFrame();
 			},
+			// 懒加载
 			scrolltolower() {
-				console.log('开始加载')
+				this.getList();
 			}
 		}
 	}
 </script>
 
 <style lang="scss">
+	.show-img{
+		width: 100%;
+	}
 	.content{
 		display: flex;
 		flex-direction: column;
 		background: rgb(248, 248, 248);
+		padding: 0 10upx;
 		.top{
 			flex: 1;
 			background: #fff;
 			padding-bottom: 40upx; 
 			.img-wrap{
-				width: 460upx;
+				width: 400upx;
 				margin: 0 auto;
 				.img-add{
 					text-align: center;
@@ -111,11 +167,10 @@
 					background: #eee;
 					border: 1px dashed #B5B8C2;
 					border-radius: 10upx;
-					uni-image{
+					.img-wrap{
 						width: 100%;
 					}
 				}
-				
 			}
 		}
 		.form{
@@ -143,6 +198,9 @@
 					color: #333;
 				}
 			}
+		}
+		.no-margin{
+			margin-top: 0;
 		}
 	}
 	.add-btn{
@@ -174,6 +232,7 @@
 		.search-wrap{
 			display: flex;
 			font-size: 26upx;
+			margin-bottom: 10px;
 			.search-input{
 				flex: 1;
 				font-size: 26upx;
@@ -197,11 +256,57 @@
 				border-bottom-right-radius: 60upx;
 			}
 		}
+		.scroll{
+			.goods-wrap{
+				display: flex;
+				flex-wrap: wrap;
+				.inner{
+					width: 50%;
+					text-align: center;
+					font-size: 24upx;
+					margin-bottom: 40upx;
+					.inner-margin{
+						box-sizing: border-box;
+						border: 1px solid #F8F8F8;
+						border-radius: 10upx;
+						padding: 16upx;
+						.img-wrap{
+							width: 100%;
+							margin: 0 auto;
+							img{
+								width: 100%;
+								object-fit: cover;
+							}
+						}
+					}
+					&:nth-child(odd) {
+						.inner-margin{
+							margin-right: 10upx;
+						}
+					}
+					&:nth-child(even) {
+						.inner-margin{
+							margin-left: 10upx;
+						}
+					}
+				}
+			}
+		}
 	}
 	.model.hide{
 		top: 100%;
 	}
 	.model.show{
 		top: 44px;
+	}
+	.save-btn{
+		width: 100%;
+		background: #1fc8db;
+		margin: 40upx 0;
+		color: #fff;
+		border-top-left-radius: 60upx;
+		border-top-right-radius: 60upx;
+		border-bottom-left-radius: 60upx;
+		border-bottom-right-radius: 60upx;
 	}
 </style>
