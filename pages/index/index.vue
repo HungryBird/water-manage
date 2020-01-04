@@ -38,7 +38,7 @@
 					累计销量
 				</view>
 			</view>
-			<view class="sale">
+			<view class="sale" @click="goGoods">
 				<view>
 					1
 				</view>
@@ -148,7 +148,14 @@
 		},
 		methods: {
 			edit() {
-				// 
+				uni.navigateTo({
+					url: '../edit/index'
+				})
+			},
+			goGoods() {
+				uni.navigateTo({
+					url: '../goods/index'
+				})
 			}
 		}
 	}

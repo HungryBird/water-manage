@@ -11,6 +11,18 @@
 			"style": {
 				"navigationBarTitleText": "店铺信息编辑"
 			}
+		},
+		{
+			"path": "pages/goods/index",
+			"style": {
+				"navigationBarTitleText": "水站商品管理"
+			}
+		},
+		{
+			"path": "pages/add/index",
+			"style": {
+				"navigationBarTitleText": "发布产品"
+			}
 		}
 	],
 	"globalStyle": {
