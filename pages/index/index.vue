@@ -3,7 +3,7 @@
 		<view class="top-wrap">
 			<view class="top">
 				<view class="left icon-wrap">
-					<uni-icon type="redo" color="#fff" size="50"></uni-icon>
+					<uni-icon type="redo" color="#fff" size="50" @click="goShare"></uni-icon>
 				</view>
 				<view class="center">
 					<image src="../../static/logo.png" mode="aspectFit"></image>
@@ -47,7 +47,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="yue">
+		<view class="yue" @click="goYue">
 			<uni-icon type="arrowright" color="#333"></uni-icon>
 			<view class="num">余额<strong>0</strong>元</view>
 		</view>
@@ -61,7 +61,7 @@
 					<view class="bottom">带配送 0</view>
 				</view>
 			</view>
-			<view class="block">
+			<view class="block" @click="goShuiGuanLi">
 				<view class="block-inner">
 					<view class="top">今日订单数</view>
 					<view class="num">
@@ -70,7 +70,7 @@
 					<view class="bottom">昨日订单数 0</view>
 				</view>
 			</view>
-			<view class="block">
+			<view class="block" @click="goYue">
 				<view class="block-inner">
 					<view class="top">本月营业额</view>
 					<view class="num">
@@ -79,7 +79,7 @@
 					<view class="bottom">带配送 0</view>
 				</view>
 			</view>
-			<view class="block">
+			<view class="block" @click="goYue">
 				<view class="block-inner">
 					<view class="top">今日营业额</view>
 					<view class="num">
@@ -88,7 +88,7 @@
 					<view class="bottom">昨日 0</view>
 				</view>
 			</view>
-			<view class="block">
+			<view class="block" @click="goTicketOrder">
 				<view class="block-inner">
 					<view class="top">水票订单</view>
 					<view class="num">
@@ -127,16 +127,19 @@
 				<view class="bottom">0</view>
 			</view>
 		</view>
+		<float-dot></float-dot>
 	</view>
 </template>
 
 <script>
 	import uniIcon from '../../components/uni-icon/uni-icon.vue'
 	import rate from '../../components/uni-rate/uni-rate.vue'
+	import floatDot from '../../components/float-dot/index.vue'
 	export default {
 		components:{
 			uniIcon,
 			rate,
+			floatDot,
 		},
 		data() {
 			return {
@@ -155,6 +158,26 @@
 			goGoods() {
 				uni.navigateTo({
 					url: '../goods/index'
+				})
+			},
+			goYue() {
+				uni.navigateTo({
+					url: '../yue/index'
+				})
+			},
+			goTicketOrder() {
+				uni.navigateTo({
+					url: '../ticketOrder/index'
+				})
+			},
+			goShare() {
+				uni.navigateTo({
+					url: '../share/index'
+				})
+			},
+			goShuiGuanLi() {
+				uni.navigateTo({
+					url: '../waterManage/index'
 				})
 			}
 		}

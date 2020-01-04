@@ -23,6 +23,30 @@
 			"style": {
 				"navigationBarTitleText": "发布产品"
 			}
+		},
+		{
+			"path": "pages/yue/index",
+			"style": {
+				"navigationBarTitleText": "余额"
+			}
+		},
+		{
+			"path": "pages/ticketOrder/index",
+			"style": {
+				"navigationBarTitleText": "水票订单"
+			}
+		},
+		{
+			"path": "pages/share/index",
+			"style": {
+				"navigationBarTitleText": "关注我们"
+			}
+		},
+		{
+			"path": "pages/waterManage/index",
+			"style": {
+				"navigationBarTitleText": "送水管理"
+			}
 		}
 	],
 	"globalStyle": {
